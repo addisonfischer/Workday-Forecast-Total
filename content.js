@@ -1,4 +1,5 @@
 function addTotalsToTable() {
+
 	const table = document.querySelector("table");
 	if (!table) {
 		console.error("No table found.");
@@ -14,7 +15,6 @@ function addTotalsToTable() {
 	const totals = [];
 
 	function recalculateTotals() {
-		// Reset totals array
 		totals.length = 0;
 
 		for (let i = 1; i < rows.length; i++) { // Skip header row
@@ -30,12 +30,10 @@ function addTotalsToTable() {
 
 		console.log("Totals array:", totals);
 
-
 		const existingTotalRow = table.querySelector(".total-row");
 		if (existingTotalRow) {
 			existingTotalRow.remove();
 		}
-
 
 		const totalRow = document.createElement("tr");
 		totalRow.classList.add("total-row");
@@ -57,7 +55,6 @@ function addTotalsToTable() {
 		table.appendChild(totalRow);
 	}
 
-
 	for (let i = 1; i < rows.length; i++) {
 		const cells = rows[i].querySelectorAll("td");
 
@@ -77,8 +74,20 @@ function addTotalsToTable() {
 		});
 	}
 
-
 	recalculateTotals();
 }
 
-addTotalsToTable();
+//wait for table and row to be loaded
+const observer = new MutationObserver((mutationsList, observer) => {
+
+	const table = document.querySelector('[data-testid="table"]');
+	const firstRow = document.querySelector(".css-bsbkdd");
+
+	if (table && firstRow) {
+		addTotalsToTable();
+		observer.disconnect();
+	}
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
